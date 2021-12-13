@@ -1,12 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:learn/core/error/exceptions.dart';
 import 'package:learn/core/error/failures.dart';
-import 'package:learn/core/platform/network_info.dart';
+import 'package:learn/core/network/network_info.dart';
 import 'package:learn/feature/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:learn/feature/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
 import 'package:learn/feature/number_trivia/data/models/number_trivia_model.dart';
 import 'package:learn/feature/number_trivia/domain/entities/number_trivia.dart';
 import 'package:learn/feature/number_trivia/domain/repositories/number_trivia_repository.dart';
+
+typedef _ConcreteOrRandomChooser = Future<NumberTrivia> Function();
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
@@ -34,7 +36,7 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   }
 
   Future<Either<Failure, NumberTrivia>> _getTrivia(
-     Future<NumberTrivia> Function() getConcreteOrRandom
+    _ConcreteOrRandomChooser getConcreteOrRandom
       ) async{
     if (await networkInfo.isConnected) {
       try {
